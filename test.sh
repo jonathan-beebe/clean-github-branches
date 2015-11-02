@@ -71,7 +71,6 @@ echo
 
 # Loop over each ancestor branch, deleting from local and remote git repo
 for branch in ${CHILDREN[@]}; do
-			command="git branch -d $branch"
 	case "$branch" in
 		origin/* ) 
 			branchName="$(echo $branch | sed 's/origin\///')"
