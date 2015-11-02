@@ -71,5 +71,18 @@ echo
 echo
 
 for branch in ${CHILDREN[@]}; do
-	echo $branch
+			command="git branch -d $branch"
+	case "$branch" in
+		origin/* ) 
+			branchName="$(echo $branch | sed 's/origin\///')"
+			command="git push origin --delete $branchName"
+		;;
+		*)
+			command="git branch -d $branch"
+		;;
+	esac
+
+	echo "will execute $command..."
+	echo $($command)
+	echo "completed $command"
 done
