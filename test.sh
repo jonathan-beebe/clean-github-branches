@@ -66,10 +66,10 @@ echo
 
 echo "found ${#CHILDREN[@]} ancestor branches"
 
-# TODO: loop over each ancestor branch, deleting from local and remote git repo
 echo
 echo
 
+# Loop over each ancestor branch, deleting from local and remote git repo
 for branch in ${CHILDREN[@]}; do
 			command="git branch -d $branch"
 	case "$branch" in
