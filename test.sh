@@ -66,10 +66,36 @@ echo
 
 echo "found ${#CHILDREN[@]} ancestor branches"
 
-# TODO: loop over each ancestor branch, deleting from local and remote git repo
 echo
 echo
 
+# Loop over each ancestor branch, deleting from local and remote git repo
 for branch in ${CHILDREN[@]}; do
-	echo $branch
+	echo
+	echo "working on $branch"
+	case "$branch" in
+		origin/* ) 
+			# handle remotes/origin case
+
+			# Get the sha hash for this branch
+			# !!!this is problematic when master shares the same hash as this branch
+			# branchSHA="$(git rev-parse $branch)"
+			# echo "branchSHA = $branchSHA"
+
+			# Get the short branch name, e.g. without the `origin/` prefix
+			# shortBranchName="$(git name-rev --name-only $branchSHA)"
+			# echo "shortBranchName = $shortBranchName"
+			# command="git push origin --delete $shortBranchName"
+
+			branchName="$(echo $branch | sed 's/origin\///')"
+			command="git push origin --delete $branchName"
+		;;
+		*)
+			command="git branch -d $branch"
+		;;
+	esac
+
+	echo
+	echo "$command"
+	echo $($command)
 done
