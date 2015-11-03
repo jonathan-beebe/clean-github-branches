@@ -78,15 +78,17 @@ for branch in ${CHILDREN[@]}; do
 			# handle remotes/origin case
 
 			# Get the sha hash for this branch
-			branchSHA="$(git rev-parse $branch)"
-			echo "branchSHA = $branchSHA"
-			# Get the short branch name, e.g. without the `origin/` prefix
-			shortBranchName="$(git name-rev --name-only $branchSHA)"
-			echo "shortBranchName = $shortBranchName"
-			command="git push origin --delete $shortBranchName"
+			# !!!this is problematic when master shares the same hash as this branch
+			# branchSHA="$(git rev-parse $branch)"
+			# echo "branchSHA = $branchSHA"
 
-			# branchName="$(echo $branch | sed 's/origin\///')"
-			# command="git push origin --delete $branchName"
+			# Get the short branch name, e.g. without the `origin/` prefix
+			# shortBranchName="$(git name-rev --name-only $branchSHA)"
+			# echo "shortBranchName = $shortBranchName"
+			# command="git push origin --delete $shortBranchName"
+
+			branchName="$(echo $branch | sed 's/origin\///')"
+			command="git push origin --delete $branchName"
 		;;
 		*)
 			command="git branch -d $branch"
@@ -95,5 +97,5 @@ for branch in ${CHILDREN[@]}; do
 
 	echo
 	echo "$command"
-	# echo $($command)
+	echo $($command)
 done
