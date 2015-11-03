@@ -73,7 +73,10 @@ echo
 for branch in ${CHILDREN[@]}; do
 	case "$branch" in
 		origin/* ) 
-			branchName="$(echo $branch | sed 's/origin\///')"
+			# shortRef="$(git rev-parse --symbolic $branch)"
+			branchSHA="$(git rev-parse $branch)"
+			branchName="$(git name-rev --name-only $branchSHA)"
+			# branchName="$(echo $branch | sed 's/origin\///')"
 			command="git push origin --delete $branchName"
 		;;
 		*)
@@ -82,6 +85,6 @@ for branch in ${CHILDREN[@]}; do
 	esac
 
 	echo "will execute $command..."
-	echo $($command)
+	# echo $($command)
 	echo "completed $command"
 done
