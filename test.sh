@@ -71,14 +71,32 @@ echo
 
 # Loop over each ancestor branch, deleting from local and remote git repo
 for branch in ${CHILDREN[@]}; do
+	# echo
+	# echo "working on $branch"
 	case "$branch" in
 		origin/* ) 
+
 			# Get the sha hash for this branch
-			# branchSHA="$(git rev-parse $branch)"
+			branchSHA="$(git rev-parse $branch)"
+			# echo "branchSHA = $branchSHA"
 			# Get the short branch name, e.g. without the `origin/` prefix
-			# branchName="$(git name-rev --name-only $branchSHA)"
-			branchName="$(echo $branch | sed 's/origin\///')"
-			command="git push origin --delete $branchName"
+			shortBranchName="$(git name-rev --name-only $branchSHA)"
+			# echo "shortBranchName = $shortBranchName"
+
+			case "$shortBranchName" in
+				# handle remotes/origin
+				remotes/origin/* )
+					# echo "found a remotes/origin/"
+					branchName="$(echo $shortBranchName | sed 's/remotes\///')"
+					command="git branch --delete --remotes $branchName"
+				;;
+				# handle origin/*
+				* )
+					command="git push origin --delete $shortBranchName"
+					# branchName="$(echo $branch | sed 's/origin\///')"
+					# command="git push origin --delete $branchName"
+				;;
+			esac
 		;;
 		*)
 			command="git branch -d $branch"
@@ -87,5 +105,5 @@ for branch in ${CHILDREN[@]}; do
 
 	echo
 	echo "$command"
-	# echo $($command)
+	echo $($command)
 done
